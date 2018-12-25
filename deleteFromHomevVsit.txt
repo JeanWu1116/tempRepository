@@ -1,0 +1,23 @@
+WITH   test01 AS 
+(
+SELECT
+student.id
+,student.name
+,class.ref_teacher_id AS  calss_teacher_id
+,teacher.teacher_name
+,student.ref_class_id
+,class.id AS class_id
+,home_visit.*
+FROM   $1campus.counsel.home_visiting_record AS home_visit
+LEFT JOIN  student
+ON student.id= home_visit.ref_student_id
+LEFT JOIN class
+ON  class.id =student.ref_class_id
+LEFT JOIN teacher 
+ON teacher.id=class.ref_teacher_id
+WHERE
+class.ref_teacher_id <>home_visit.ref_teacher_id
+OR   class.ref_teacher_id IS  NULL
+OR home_visit.ref_teacher_id  IS  NULL
+
+)SELECT  COUNT (*)FROM test01
